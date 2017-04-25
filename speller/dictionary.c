@@ -161,7 +161,13 @@ bool unload(void)
 {
     // TODO
     int i;
-    freenodes(root);
+    for(i=0;i<27;i++)
+    {
+        if(root->children[i]!=NULL)
+        {
+            freenodes(root->children[i]);
+        }
+    }
     return true;
 }
 
@@ -173,10 +179,6 @@ void freenodes(link curr)
         if(curr->children[i]!=NULL)
         {
             freenodes(curr->children[i]);
-        }
-        else
-        {
-            return;
         }
     }
     free(curr);
