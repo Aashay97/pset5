@@ -12,6 +12,7 @@
 
 unsigned int count=0;
 
+
 typedef struct node
 {
     bool end;
@@ -20,7 +21,9 @@ typedef struct node
 node;
 typedef node* link;
 
-link root=NULL;
+void freenodes(link curr);
+
+link root=&(node){false,{NULL}};
 
 /**
  * Returns true if word is in dictionary else false.
@@ -98,7 +101,6 @@ bool load(const char *dictionary)
     }
     
     unsigned int ch=fgetc(fp);
-    root=create(root);
     link temp=root;
     
     while(ch!=EOF)
@@ -158,5 +160,24 @@ unsigned int size(void)
 bool unload(void)
 {
     // TODO
-    return false;
+    int i;
+    freenodes(root);
+    return true;
+}
+
+void freenodes(link curr)
+{
+    int i;
+    for(i=0;i<27;i++)
+    {
+        if(curr->children[i]!=NULL)
+        {
+            freenodes(curr->children[i]);
+        }
+        else
+        {
+            return;
+        }
+    }
+    free(curr);
 }
