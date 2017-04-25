@@ -10,6 +10,8 @@
 
 #include "dictionary.h"
 
+unsigned int count=0;
+
 typedef struct node
 {
     bool end;
@@ -18,14 +20,53 @@ typedef struct node
 node;
 typedef node* link;
 
+link root=NULL;
+
 /**
  * Returns true if word is in dictionary else false.
  */
 bool check(const char *word)
 {
     // TODO
+    int n=strlen(word),i,ch;
+    link temp=root;
     
+    for(i=0;i<n;i++)
+    {
+        if(isalpha(word[i])||word[i]=='\'')
+        {
+            if(word[i]=='\'')
+            {
+                ch=26;
+            }
+            
+            else
+            {
+                ch=tolower(word[i])-97;
+            }
+            temp=temp->children[ch];
+            if(temp==NULL)
+            {
+                return false; 
+            }
+            
+        }
+        
+        else
+        {
+            return false;
+        }
+    }
+    if(temp->end==true)
+    {
+        return true;
+    }
+    
+    else
+    {
     return false;
+    }
+    
 }
 
 /**
@@ -40,7 +81,8 @@ link create(link newnode)
     {
         newnode->children[i]=NULL;
     }
-    new->end=false;
+    newnode->end=false;
+    return newnode;
 }
 
 bool load(const char *dictionary)
@@ -56,7 +98,6 @@ bool load(const char *dictionary)
     }
     
     unsigned int ch=fgetc(fp);
-    link root;
     root=create(root);
     link temp=root;
     
@@ -77,7 +118,8 @@ bool load(const char *dictionary)
             
             if(temp->children[ch]==NULL)
             {
-                link next=create(next);
+                link next=NULL;
+                next=create(next);
                 temp->children[ch]=next;
                 temp=next;
             }
@@ -92,6 +134,7 @@ bool load(const char *dictionary)
         {
             temp->end=true;
             temp=root;
+            count++;
         }
         
         ch=fgetc(fp);
@@ -106,7 +149,7 @@ bool load(const char *dictionary)
 unsigned int size(void)
 {
     // TODO
-    return 0;
+    return count;
 }
 
 /**
