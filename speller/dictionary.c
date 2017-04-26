@@ -10,9 +10,10 @@
 
 #include "dictionary.h"
 
+//to count no. of words;
 unsigned int count=0;
 
-
+//define basic structure for a trie 
 typedef struct node
 {
     bool end;
@@ -21,8 +22,11 @@ typedef struct node
 node;
 typedef node* link;
 
+//declare additional functions
 void freenodes(link curr);
+link create(link newnode);
 
+//global variable root of the trie
 link root=&(node){false,{NULL}};
 
 /**
@@ -30,11 +34,11 @@ link root=&(node){false,{NULL}};
  */
 bool check(const char *word)
 {
-    // TODO
     int n=strlen(word),i,ch;
-    link temp=root;
+    link temp=root;     //to traverse the trie
     
-    for(i=0;i<n;i++)
+    //traverse through the trie till the end of the word
+    for(i=0;i<n;i++) 
     {
         if(isalpha(word[i])||word[i]=='\'')
         {
@@ -48,7 +52,7 @@ bool check(const char *word)
                 ch=tolower(word[i])-97;
             }
             temp=temp->children[ch];
-            if(temp==NULL)
+            if(temp==NULL)      
             {
                 return false; 
             }
@@ -60,7 +64,9 @@ bool check(const char *word)
             return false;
         }
     }
-    if(temp->end==true)
+    
+    //check the boolean
+    if(temp->end==true) 
     {
         return true;
     }
@@ -75,23 +81,9 @@ bool check(const char *word)
 /**
  * Loads dictionary into memory. Returns true if successful else false.
  */
- 
-link create(link newnode)
-{
-    newnode=(link)malloc(sizeof(node));
-    int i;
-    for(i=0;i<27;i++)
-    {
-        newnode->children[i]=NULL;
-    }
-    newnode->end=false;
-    return newnode;
-}
-
 bool load(const char *dictionary)
 {
-    // TODO
-    
+    //open dictionary in the read mode
     FILE *fp=fopen(dictionary,"r");
     
     if(fp==NULL)
@@ -101,7 +93,7 @@ bool load(const char *dictionary)
     }
     
     unsigned int ch=fgetc(fp);
-    link temp=root;
+    link temp=root;     //variable to traverse the list
     
     while(ch!=EOF)
     {
@@ -118,12 +110,13 @@ bool load(const char *dictionary)
                 ch=ch-97;
             }
             
+            //only create a new node if it doesn't exist before
             if(temp->children[ch]==NULL)
             {
                 link next=NULL;
                 next=create(next);
-                temp->children[ch]=next;
-                temp=next;
+                temp->children[ch]=next;    //link the new node
+                temp=next;                  
             }
             
             else
@@ -134,9 +127,9 @@ bool load(const char *dictionary)
         
         else
         {
-            temp->end=true;
-            temp=root;
-            count++;
+            temp->end=true;     //if the word has ended,make the boolean true.
+            temp=root;          //go back to the beginning of the trie
+            count++;            //counts number of words loaded
         }
         
         ch=fgetc(fp);
@@ -150,7 +143,6 @@ bool load(const char *dictionary)
  */
 unsigned int size(void)
 {
-    // TODO
     return count;
 }
 
@@ -159,7 +151,7 @@ unsigned int size(void)
  */
 bool unload(void)
 {
-    // TODO
+    // root has not been allocated heap memory so one can only free its children and not root itself
     int i;
     for(i=0;i<27;i++)
     {
@@ -171,6 +163,20 @@ bool unload(void)
     return true;
 }
 
+//function to initialize a new node 
+link create(link newnode)
+{
+    newnode=(link)malloc(sizeof(node));
+    int i;
+    for(i=0;i<27;i++)
+    {
+        newnode->children[i]=NULL;
+    }
+    newnode->end=false;
+    return newnode;
+}
+
+//function to recursively free a node and its children
 void freenodes(link curr)
 {
     int i;
