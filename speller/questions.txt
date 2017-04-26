@@ -1,7 +1,19 @@
-0.  TODO
-1.  TODO
-2.  TODO
-3.  TODO
-4.  TODO
-5.  TODO
-6.  TODO
+0.  pneumonoultramicroscopicsilicovolcanoconiosis is the longest word in this pset's(and any major) dictionary.
+    It has been coined for a disease of the lung.
+1.  getrusage returns resource usage statistics(like memory used and cpu time) for a calling process,its descendents or the calling thread.
+2.  16 members.
+3.  We pass by reference because passing the entire structures would lead to wastage of time and resources.
+4.  fgetc not only returns an unsigned int but also updates the file pointer to the next character.
+    We are using the for loop to continually get character after character and then decide what to
+    do with each of them singly. If the character is either an alphabet or an apostrophe, we store
+    it in the array(word). If the word length turns out to be greater than 45 or if the character 
+    is a number, we ignore the word and restart for the next word with index=0 passing over all 
+    characters that aren't the aforementioned. Now, once a word is completed, we end it with a \0
+    (as for a string) and update the counter. We now check the word for misspellings. If the word 
+    is misspelled, it is printed and the misspellings counter is incremented. This entire process
+    is repeated till we reach the EOF.
+5.  fscanf will take in everything until we reach a space. Thus the output string could be longer 
+    than 45(we would be going out of bounds of the array). It may also contain commas, full stops
+    and digits which we do not want.
+6.  We want to make sure that the parameters aren't changed erroneously within the function i.e.
+    they need to be a constant.
